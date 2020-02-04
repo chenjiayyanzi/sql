@@ -1,0 +1,74 @@
+create table products(
+product_no integer,
+name text,
+price numeric check(price>0)
+);
+
+// you can also give the constraint a separate name, this clarifies error messges and allows you to refer to the constraint when you need to change it.
+
+create table products(
+product_no integer,
+name text,
+price numeric constraint positive_price check(price>0)
+);
+
+//a check constraint can also refer to several columns.
+create table products(
+product_no integer,
+name text,
+price numeric check(price>0),
+discounted_price numeric check(discounted_price>0)
+check(price > discounted_price)
+);
+
+//not null constraints
+create table products(
+product_no integer not null,
+name text not null,
+price numeric
+);
+
+// unique constraints
+create table products(
+products_no integer unique,
+name text,
+price numeric
+);
+
+//primary keys = not null & unique
+create table products(
+product_no integer primary key,
+name text,
+price numeric
+);
+
+//foreign keys  
+create table orders (
+order_id integer primary key,
+product_no integer references products(product_no),
+quantity integer
+);
+CREATE TABLE products (
+    product_no integer PRIMARY KEY,
+    name text,
+    price numeric
+);
+
+CREATE TABLE orders (
+    order_id integer PRIMARY KEY,
+    shipping_address text,
+    ...
+);
+
+CREATE TABLE order_items (
+    product_no integer REFERENCES products on delete restrict,
+    order_id integer REFERENCES orders on delete cascade,
+    quantity integer,
+    PRIMARY KEY (product_no, order_id)
+);
+
+//restricting and cascading deletes are the two most common options.
+//restrict prevent deletion of a referenced row.
+//cascade sepcifies that when a referenced row is deleted,rows referecing
+//it should be automaticallu deleted as well.
+

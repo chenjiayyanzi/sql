@@ -1,0 +1,30 @@
+// aggregate functions: computes a single result from multiple input rows.
+// for example count,sum,avg(average),max,min over a set of rows.
+
+select max(price) from house;
+select * from house where price = (select max(price) from house);
+
+alpes=> select city,max(price) from house;
+ERROR:  column "house.city" must appear in the GROUP BY clause or be used in an aggregate function
+LINE 1: select city,max(price) from house;
+               ^
+alpes=> select city,max(price) from house group by city;
+       city        |  max   
+-------------------+--------
+ Poisy             | 230000
+ Thonons-les-bains | 250000
+ Runilly           | 270000
+ Annecy            | 380000
+(4 rows)
+
+// we can use having to filter grouped rows;
+alpes=> select city,min(price) from house group by city having min(price)<260000;
+       city        |  min   
+-------------------+--------
+ Poisy             | 230000
+ Thonons-les-bains | 250000
+(2 rows)
+
+
+
+

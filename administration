@@ -1,0 +1,19 @@
+//before you can do anything, you must initialize a databse storage area on disk.
+
+
+root# mkdir /usr/local/pgsql
+root# chown postgres /usr/local/pgsql
+root# su postgres
+postgres$ initdb -D /usr/local/pgsql/data
+//$ pg_ctl -D /usr/local/pgsql/data initdb
+
+//start the server
+postgres -D /usr/local/pgsql/data
+
+//its better to start postgres in the background
+postgres -D /usr/local/pgsql/data >logfile 2>&1 &
+
+//enable autostart after installation
+sudo systemctl enable postgresql
+
+

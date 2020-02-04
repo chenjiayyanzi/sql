@@ -1,0 +1,8 @@
+//view gives a name to the query that yu can refer to like an ordinary table
+create view myview as
+select city,zipcode,price,surface,location
+from house,city
+where house.city = city.city;
+
+select * from myview;
+

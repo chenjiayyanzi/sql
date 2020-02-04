@@ -1,0 +1,15 @@
+createdb mydb
+//should connected by user that has privilige to create database.
+//database user is different than system user
+//by default, superuser will be named postgres
+
+dropdb mydb //delete db
+
+//postgres:admin123
+
+psql mydb alpes 
+//connect to mydb with user alpes
+
+//get help \h, get out of psql, type \q
+
+

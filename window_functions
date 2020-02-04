@@ -1,0 +1,54 @@
+//a window function performs a calculation acrross a set of table rows
+// that are somehow related to the current row.
+// here is an example that shows how to compare each enployee's 
+// salary with the average salary in his or her departement
+
+select depname,empno,salary,avg(salary) over (partition by depname) from empsalary;
+
+  depname  | empno | salary |          avg          
+-----------+-------+--------+-----------------------
+ develop   |    11 |   5200 | 5020.0000000000000000
+ develop   |     7 |   4200 | 5020.0000000000000000
+ develop   |     9 |   4500 | 5020.0000000000000000
+ develop   |     8 |   6000 | 5020.0000000000000000
+ develop   |    10 |   5200 | 5020.0000000000000000
+ personnel |     5 |   3500 | 3700.0000000000000000
+ personnel |     2 |   3900 | 3700.0000000000000000
+ sales     |     3 |   4800 | 4866.6666666666666667
+ sales     |     1 |   5000 | 4866.6666666666666667
+ sales     |     4 |   4800 | 4866.6666666666666667
+(10 rows)
+
+// this actually is the same function as the non-wndow avg aggregate
+// but the over clause causes it to be treated as a window function
+// and computed across the window frame.
+
+select depname,empno,salary,rank() over (partition by depname order by salary desc) from empsalary;
+  depname  | empno | salary | rank 
+-----------+-------+--------+------
+ develop   |     8 |   6000 |    1
+ develop   |    10 |   5200 |    2
+ develop   |    11 |   5200 |    2
+ develop   |     9 |   4500 |    4
+ develop   |     7 |   4200 |    5
+ personnel |     2 |   3900 |    1
+ personnel |     5 |   3500 |    2
+ sales     |     1 |   5000 |    1
+ sales     |     4 |   4800 |    2
+ sales     |     3 |   4800 |    2
+(10 rows)
+
+alpes=> select city,zipcode,price,surface,rank() over (partition by city order by price desc) from house;
+       city        | zipcode | price  | surface | rank 
+-------------------+---------+--------+---------+------
+ Annecy            | 74000   | 380000 |      55 |    1
+ Annecy            | 74000   | 300000 |      50 |    2
+ Poisy             | 74500   | 300000 |      80 |    1
+ Poisy             | 74500   | 270000 |      70 |    2
+ Poisy             | 74500   | 230000 |      60 |    3
+ Rumilly           | 74600   | 330000 |      76 |    1
+ Rumilly           | 74600   | 270000 |      60 |    2
+ Thonons-les-bains | 74300   | 250000 |      54 |    1
+(8 rows)
+
+

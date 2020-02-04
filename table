@@ -1,0 +1,90 @@
+//create table 
+create table maison(
+  id int primary key not null,
+  city varchar(30),
+  zipcode varchar(10),
+  price int,
+  surface int,
+  published_date date
+);
+
+create table city(
+  city varchar(30),
+  location point
+)
+
+// insert values
+insert into maison values (1,'Annecy','74000',430000,70,'2020-02-03);
+
+//you can also use COPY to load large amounts of data frmom text files
+//need to run this in psql
+COPY maison FROM '/home/user/maison.txt'
+//can read file COPY_import_data to check how to use
+
+//update table
+update maison set price=320000 where id=5;
+
+//delete rows
+delete from maison where city='Poisy';
+
+select city,(price/surface) as price_per_sm from maison;
+
+select * from maison order by price,surface;
+select distinct city from maison;
+
+select * from maison left outer join city on (maison.city = city.city);
+// left outer join: the table mentioned on the left of the join operator
+// will have each of its rows in the output at least once.
+
+alpes=> select * from house left outer join city on (house.city = city.city);
+       city        | zipcode | price  | surface |  city  | location 
+-------------------+---------+--------+---------+--------+----------
+ Annecy            | 74000   | 300000 |      50 | Annecy | (67,67)
+ Annecy            | 74000   | 380000 |      55 | Annecy | (67,67)
+ Thonons-les-bains | 743000  | 250000 |      54 |        | 
+ Poisy             | 745000  | 230000 |      60 |        | 
+ Runilly           | 746000  | 270000 |      60 |        | 
+(5 rows)
+
+alpes=> select * from house;
+       city        | zipcode | price  | surface 
+-------------------+---------+--------+---------
+ Annecy            | 74000   | 380000 |      55
+ Thonons-les-bains | 743000  | 250000 |      54
+ Annecy            | 74000   | 300000 |      50
+ Poisy             | 745000  | 230000 |      60
+ Runilly           | 746000  | 270000 |      60
+(5 rows)
+
+alpes=> select * from city;
+  city  | location 
+--------+----------
+ Annecy | (67,67)
+(1 row)
+
+alpes=> select * from house right outer join city on (house.city = city.city);
+  city  | zipcode | price  | surface |  city  | location 
+--------+---------+--------+---------+--------+----------
+ Annecy | 74000   | 300000 |      50 | Annecy | (67,67)
+ Annecy | 74000   | 380000 |      55 | Annecy | (67,67)
+(2 rows)
+
+alpes=> select * from house full outer join city on (house.city = city.city);
+       city        | zipcode | price  | surface |  city  | location 
+-------------------+---------+--------+---------+--------+----------
+ Annecy            | 74000   | 300000 |      50 | Annecy | (67,67)
+ Annecy            | 74000   | 380000 |      55 | Annecy | (67,67)
+ Thonons-les-bains | 743000  | 250000 |      54 |        | 
+ Poisy             | 745000  | 230000 |      60 |        | 
+ Runilly           | 746000  | 270000 |      60 |        | 
+(5 rows)
+
+alpes=> select * from city full outer join house on (city.city=house.city);
+  city  | location |       city        | zipcode | price  | surface 
+--------+----------+-------------------+---------+--------+---------
+ Annecy | (67,67)  | Annecy            | 74000   | 300000 |      50
+ Annecy | (67,67)  | Annecy            | 74000   | 380000 |      55
+        |          | Thonons-les-bains | 743000  | 250000 |      54
+        |          | Poisy             | 745000  | 230000 |      60
+        |          | Runilly           | 746000  | 270000 |      60
+(5 rows)

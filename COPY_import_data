@@ -1,0 +1,12 @@
+ create table house(
+ city varchar(20),
+ zipcode varchar(10),
+ price int,
+ surface int
+ );
+//after creating the table, you can use COPY to import data
+//first need to connect to psql 
+
+psql mydb alpes
+copy house from '/Users/chenjiayu/devops/house.txt'
+

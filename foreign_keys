@@ -1,0 +1,22 @@
+//you want to make sure that on one can insert rows in the weather table
+//that do not have a matching entry in the cities table.
+//this is called maintaining the referential intergrity of you data 
+
+create table cities(
+city varchar(80) primary key,
+location point
+);
+
+create table weather(
+city varchar(80) references cities(city),
+temp_lo int,
+temp_hi int,
+precp real,
+date date
+);
+
+Now try inserting an invalid record:
+
+INSERT INTO weather VALUES ('Berkeley', 45, 53, 0.0, '1994-11-28');
+ERROR:  insert or update on table "weather" violates foreign key constraint "weather_city_fkey"
+DETAIL:  Key (city)=(Berkeley) is not present in table "cities".

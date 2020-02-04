@@ -1,0 +1,17 @@
+// a transaction is that it bundles multiple setps into a single, 
+// all or nothing operation. a transaction is said to be atomic.
+
+begin;
+UPDATE accounts SET balance = balance - 100.00
+    WHERE name = 'Alice';
+UPDATE branches SET balance = balance - 100.00
+    WHERE name = (SELECT branch_name FROM accounts WHERE name = 'Alice');
+UPDATE accounts SET balance = balance + 100.00
+    WHERE name = 'Bob';
+UPDATE branches SET balance = balance + 100.00
+    WHERE name = (SELECT branch_name FROM accounts WHERE name = 'Bob');
+commit;
+
+//if partway through the transaction, we decide we do not want to commit,
+//we can issue the command rollback instead of commit
+//and all our updates so far will be cancaled.
